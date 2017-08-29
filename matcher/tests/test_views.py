@@ -7,7 +7,10 @@ from matcher.views import user_login
 pytestmark = pytest.mark.django_db
 
 
-class TestLogin:
+class TestAuthentication:
+    def test_register(self):
+        pass
+
     def test_login(self):
         user = mixer.blend('auth.User')
         kwargs = {

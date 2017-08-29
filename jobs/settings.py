@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ['.localhost', '.herokuapp.com']
 
 
 # Application definition
@@ -58,7 +58,7 @@ ROOT_URLCONF = 'jobs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', os.path.join(BASE_DIR, 'jobs', 'templates')],
+        'DIRS': ['templates', os.path.join(BASE_DIR, 'matcher', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,14 +117,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = 'home'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "jobs", "static")
+STATIC_ROOT = os.path.join(BASE_DIR, 'jobs', 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
-try:
-    from jobs.local_settings import *
-except ImportError:
-    pass
+# try:
+#     from jobs.local_settings import *
+# except ImportError:
+#     pass

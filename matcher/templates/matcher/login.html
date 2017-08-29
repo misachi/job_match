@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block nav %}
+<div class="row navbar-right col-sm-5">
+    <ul class="navbar-nav nav">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li ><a href="{% url 'register' %}">Register</a></li>
+        <li class="active"><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact us</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<div class="maximum-width col-md-offset-2 margin-top-120 col-md-6">
+        <div class="page-header">
+            <span class="h2">Login Here</span>
+        </div>
+        <form class="form-horizontal" method="POST" action="" role="form" id="login-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <!--{{form.as_p}}-->
+            <!--<button type="submit" >LogIn</button>-->
+            <div class="form-group">
+				<label for={{ form.username.id_for_label }} class="control-label col-md-2">{{ form.username.label }}</label>
+				<div class="col-md-10">
+					{{ form.username }}
+				</div>
+                {{ form.username.errors }}
+			</div>
+            <div class="form-group">
+				<label for={{ form.password.id_for_label }} class="control-label col-md-2">{{ form.password.label }}</label>
+				<div class="col-md-10">
+					{{ form.password }}
+				</div>
+                {{ form.password.errors }}
+			</div>
+            <div class="col-md-offset-2">
+				<button type="submit" class="btn btn-primary btn-block">Login</button>
+			</div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script >
+    $(document).ready(function(){
+       var window_width = $(window).width();
+        if (window_width <= 1233) {
+            $('#navbar-container .navbar-right').removeClass('col-sm-4');
+            $('#navbar-container .navbar-right').addClass('col-sm-6');
+        }
+        if (window_width <= 987){
+            $('#navbar-container .navbar-right').removeClass('col-sm-6');
+            $('#navbar-container .navbar-right').addClass('col-sm-7');
+        }
+
+        var validator = $("#login-form").bootstrapValidator({
+            feedbackIcons : {
+                valid : "glyphicon glyphicon-ok",
+                invalid : "glyphicon glyphicon-remove",
+                validating : "glyphicon glyphicon-refresh",
+            },
+            fields : {
+                username : {
+                    message : "Username is required",
+                    validators : {
+                        notEmpty : {
+                            message : "Please provide a username"
+                        }
+                    }
+                },
+                password : {
+                    message : "Password is required",
+                    validators: {
+                        notEmpty : {
+                            message : "Password is required"
+                        },
+                    }
+                },
+            }
+        });
+    });
+</script>
+
+{% endblock %}

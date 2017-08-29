@@ -2,6 +2,7 @@ import uuid
 
 from django.core.validators import MinValueValidator
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User,Group
 from django.db import models
 
 SINGLE = 'single'
@@ -44,7 +45,7 @@ class JobPost(models.Model):
     Holds data related to a particular job
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey(User, related_name='job_posts')
+    user = models.ForeignKey(User)
     category = models.CharField(max_length=20, choices=JOB_TYPE)
     title = models.CharField(max_length=20)
     description = models.TextField()
@@ -54,12 +55,16 @@ class JobPost(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Potential(models.Model):
     """
     Holds data for potential employees
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    job_post = models.ForeignKey(JobPost, related_name='potential_jobs')
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone = models.CharField(max_length=12)
@@ -74,6 +79,9 @@ class Potential(models.Model):
     edu_level = models.CharField(max_length=20, choices=EDUCATION)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
 
 
 
