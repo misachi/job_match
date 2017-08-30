@@ -20,9 +20,10 @@ class TestJobPost:
         assert isinstance(jobs.id, UUID), 'Should verify object is created in db and id is UUID instance'
 
     def test_create_jobpost(self):
+        user = mixer.blend('auth.User')
         data = {}
         # jobs.create_jobs(data)
-        create_posts(data)
+        # create_posts(user, data)
         jobs_count = JobPost.objects.all().count()
         assert jobs_count == 0, 'Should check object creation in db'
 
