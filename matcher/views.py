@@ -28,7 +28,10 @@ def user_login(request):
 
 def index(request):
     jobs = JobPost.objects.all()
-    return render(request, 'matcher/home.html', {'all_jobs': jobs})
+    context = {
+        'all_jobs': jobs,
+    }
+    return render(request, 'matcher/home.html', context)
 
 
 def register(request):
