@@ -9,6 +9,7 @@ from matcher.services import (
     create_potential
 )
 from matcher.forms import RegistrationForm
+from matcher.models import JobPost, Potential
 
 
 def user_login(request):
@@ -26,7 +27,8 @@ def user_login(request):
 
 
 def index(request):
-    return render(request, 'matcher/home.html', {})
+    jobs = JobPost.objects.all()
+    return render(request, 'matcher/home.html', {'all_jobs': jobs})
 
 
 def register(request):
@@ -54,6 +56,10 @@ def register(request):
         user_form = RegistrationForm()
 
     return render(request, 'matcher/register.html', {'form': user_form})
+
+
+def get_jobs(request, category):
+    pass
 
 
 
