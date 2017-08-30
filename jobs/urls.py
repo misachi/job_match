@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 from matcher.forms import LoginForm
+from matcher.views import index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', index, name='home'),
     url(r'^jobs/', include('matcher.urls')),
     url(r'^login/$', auth_views.login, {'template_name': 'matcher/login.html',
                                         'authentication_form': LoginForm}, name='login'),
