@@ -177,6 +177,7 @@
 }
 .brand{
 	max-height: 30px;
+	border-radius: 120px;
 	
 }
 @media (max-width: 770px){
