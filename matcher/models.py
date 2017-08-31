@@ -58,11 +58,6 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title
 
-    # class Meta:
-    #     permissions = (
-    #         ('create_job')
-    #     )
-
 
 class Potential(models.Model):
     """

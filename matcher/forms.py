@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
-from matcher.models import JOB_TYPE, JobPost
+from matcher.models import JobPost, Potential, JOB_TYPE,MARITAL_STATUS, EDUCATION
 
 
 class LoginForm(AuthenticationForm):
@@ -197,3 +197,105 @@ class UpdateForm(forms.ModelForm):
     class Meta:
         model = JobPost
         fields = ['category', 'title', 'description', 'requirements', 'start_date', 'end_date']
+
+
+class PotentialForm(forms.ModelForm):
+    first_name = forms.CharField(
+        label='First Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'First name',
+            'name': 'first_name'
+        })
+    )
+    last_name = forms.CharField(
+        label='Last Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Last name',
+            'name': 'last_name'
+        })
+    )
+    phone = forms.CharField(
+        label='phone',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'phone',
+            'name': 'phone'
+        })
+    )
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email Address',
+            'name': 'email'
+        })
+    )
+    dob = forms.DateField(
+        label='Birth Date',
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Data of birth',
+            'name': 'dob'
+        })
+    )
+    nationality = forms.CharField(
+        label='Nationality',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Place of birth',
+            'name': 'nationality'
+        })
+    )
+    marital_status = forms.ChoiceField(
+        label='Status',
+        choices=MARITAL_STATUS,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'marital_status',
+        })
+    )
+    edu_level = forms.ChoiceField(
+        label='Education',
+        choices=EDUCATION,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'edu_level',
+        })
+    )
+    experience = forms.IntegerField(
+        label='Experience',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Work experience',
+            'name': 'experience'
+        })
+    )
+    salary = forms.DecimalField(
+        label='Salary',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Salary expectations',
+            'name': 'salary'
+        })
+    )
+
+    class Meta:
+        model = Potential
+        fields = ['first_name', 'last_name', 'phone', 'email', 'dob', 'nationality', 'marital_status', 'experience', 'salary', 'edu_level']
+
+
+class SearchForm(forms.ModelForm):
+    category = forms.ChoiceField(
+        choices=JOB_TYPE,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'data-live-search': 'true',
+            'name': 'category'
+        })
+    )
+
+    class Meta:
+        model = JobPost
+        fields = ['category']
