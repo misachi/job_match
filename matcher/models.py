@@ -83,5 +83,8 @@ class Potential(models.Model):
     def __str__(self):
         return self.email
 
-
+    class Meta:
+        permissions = (
+            ('can_view_potential', 'Can view potential employees applications'),
+        )
 

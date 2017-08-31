@@ -236,7 +236,7 @@ class PotentialForm(forms.ModelForm):
         label='Birth Date',
         widget=forms.DateInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Data of birth',
+            'placeholder': 'Data of birth DD/MM/YYYY',
             'name': 'dob'
         })
     )

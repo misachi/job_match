@@ -12,9 +12,4 @@ $(document).ready(function(){
 			 $("#padding-top").addClass("padding-top-10");
 
 		}
-//		$('#new_field').on("click", function () {
-//            $('#add').append('
-//
-//            ')
-//        })
 });

@@ -132,22 +132,9 @@ def get_jobs(request):
     
     :param request: 
     :param category: 
-    Description: retrieves posts based on specific categories 
+    Description: retrieves posts based on given categories 
     """
-    print('Amen!')
-    # if request.method == 'POST':
-    #     search_form = SearchForm(request.POST)
-    #     if search_form.is_valid():
-    #         category = search_form.cleaned_data.get('category')
-    #         jobs = get_jobs_per_category(category)
-    #
-    #         if jobs is None:
-    #             return HttpResponseBadRequest('Jobs matching query do not exist')
-    #         return redirect('home')
-    #     else:
-    #         return render(request, 'matcher/home.html', {'form': search_form})
-    # else:
-    # search_form = SearchForm()
+
     category = request.POST.get('category')
     jobs = get_jobs_per_category(category)
 
@@ -157,14 +144,13 @@ def get_jobs(request):
     return render(request, 'matcher/categories.html', {'jobs': jobs})
 
 
-def save_potential(request):
+def save_potential(request, job_id):
     if request.method == 'POST':
         pot_form = PotentialForm(request.POST)
         if pot_form.is_valid():
-            post_id = pot_form.cleaned_data.get('post_id')
             data = pot_form.cleaned_data
             with transaction.atomic():
-                create_potential(post_id, data)
+                create_potential(job_id, data)
             return redirect('home')
         else:
             render(request, 'matcher/potential.html', {'form': pot_form})
@@ -172,4 +158,11 @@ def save_potential(request):
         pot_form = PotentialForm()
     return render(request, 'matcher/potential.html', {'form': pot_form})
 
+
+@login_required(login_url='login')
+def get_applications(request):
+    user = request.user
+    if not user.has_perm('matcher.can_view_potential'):
+        return HttpResponseForbidden('User not allowed to view applicants')
+    return render(request, 'matcher/applications.html', {})
 

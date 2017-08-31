@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block title %}Sign up{% endblock %}
+{% block title %}Save Details{% endblock %}
 
 
  {% block nav %}
@@ -16,4 +16,86 @@
 			<li><a href="#">Contact us</a></li>
 		</ul>
 	</div>
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="margin-top-120 col-md-6 col-md-offset-3">
+        <form class="form-horizontal" method="POST" action="" role="form">
+			{% csrf_token %}
+			{{ form.non_field_errors }}
+			<div class="form-group">
+				{{ form.first_name.errors }}
+				<label for={{ form.first_name.id_for_label }} class="control-label col-md-2">Name </label>
+				<div class="col-md-5">
+					{{ form.first_name }}
+				</div>
+				{{ form.last_name.errors }}
+				<div class="col-md-5" id="padding-top">
+					{{ form.last_name }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form.phone.errors }}
+				<label for={{ form.phone.id_for_label }} class="control-label col-md-2">{{ form.phone.label }}</label>
+				<div class="col-md-10">
+					{{ form.phone }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form.email.errors }}
+				<label for={{ form.email.id_for_label }} class="control-label col-md-2">{{ form.email.label }}</label>
+				<div class="col-md-10">
+					{{ form.email }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form.dob.errors }}
+				<label for="form.dob.id_for_label" class="control-label col-md-2">{{ form.dob.label }}</label>
+				<div class="col-md-10">
+					{{ form.dob }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form.nationality.errors }}
+				<label for="form.nationality.id_for_label" class="control-label col-md-2">{{ form.nationality.label }}</label>
+				<div class="col-md-10">
+					{{ form.nationality }}
+				</div>
+			</div>
+            <div class="form-group">
+				{{ form.marital_status.errors }}
+				<label for="form.marital_status.id_for_label" class="control-label col-md-2">{{ form.marital_status.label }}</label>
+				<div class="col-md-10">
+					{{ form.marital_status }}
+				</div>
+			</div>
+            <div class="form-group">
+				{{ form.experience.errors }}
+				<label for="form.experience.id_for_label" class="control-label col-md-2">{{ form.experience.label }}</label>
+				<div class="col-md-10">
+					{{ form.experience }}
+				</div>
+			</div>
+            <div class="form-group">
+				{{ form.salary.errors }}
+				<label for="form.salary.id_for_label" class="control-label col-md-2">{{ form.salary.label }}</label>
+				<div class="col-md-10">
+					{{ form.salary }}
+				</div>
+			</div>
+            <div class="form-group">
+				{{ form.edu_level.errors }}
+				<label for="form.edu_level.id_for_label" class="control-label col-md-2">{{ form.edu_level.label }}</label>
+				<div class="col-md-10">
+					{{ form.edu_level }}
+				</div>
+			</div>
+			<div class="col-md-offset-2">
+				<button type="submit" class="btn btn-primary btn-block">Save</button>
+			</div>
+		</form>
+    </div>
+</div>
 {% endblock %}

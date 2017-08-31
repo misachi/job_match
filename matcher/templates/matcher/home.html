@@ -35,7 +35,7 @@
                             <option>Computer and Engineering</option>
                             <option>Finance and Accounting</option>
                             <option>Catering</option>
-                            <option>Arts</option>
+                            <option>Art</option>
                             <option>Music</option>
                         </select>
                         <span class="input-group-btn">
@@ -63,6 +63,10 @@
                 {% if user.is_authenticated %}
                 <div class="panel-footer">
                     <b><a href="{% url 'update' job.id %}">Update</a></b>
+                </div>
+                {% else %}
+                <div class="panel-footer">
+                    <b><a href="{% url 'potential' job.id %}">Apply</a></b>
                 </div>
                 {% endif %}
             </div>
