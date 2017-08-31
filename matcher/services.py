@@ -1,15 +1,26 @@
+from datetime import datetime
+
+from django.utils import timezone
+
 from matcher.models import JobPost, Potential
 
 
 def create_posts(user, data):
+    print('Were here')
+    requirements = data.getlist('requirements')
+
+    start = timezone.make_aware(datetime.strptime(
+        data['start_date'], '%m/%d/%Y %H:%M %p'), timezone=timezone.utc)
+    end = timezone.make_aware(datetime.strptime(
+        (data['end_date']), '%m/%d/%Y %H:%M %p'), timezone=timezone.utc)
     JobPost.objects.create(
         user=user,
         category=data['category'],
         title=data['title'],
         description=data['description'],
-        requirements=data['requirements'],
-        start_date=data['start'],
-        end_date=data['end']
+        requirements=requirements,
+        start_date=start,
+        end_date=end
     )
 
 

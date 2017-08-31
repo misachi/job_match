@@ -177,6 +177,7 @@
 }
 .brand{
 	max-height: 30px;
+	border-radius: 120px;
 	
 }
 @media (max-width: 770px){
@@ -246,27 +247,6 @@
 	border-top: none;
 	border-left: solid;
 	border-right: solid;
-}
-.slide1{
-	background-image: url(../img/okc11.jpg);
-}
-.slide2{
-	background-image: url(../img/okc2.jpg);
-}
-.slide3{
-	background-image: url(../img/okc3.jpg);
-}
-.slide4{
-	background-image: url(../img/okc4.jpg);
-}
-.slide5{
-	background-image: url(../img/okc5.jpg);
-}
-.slide6{
-	background-image: url(../img/okc6.jpg);
-}
-.slide7{
-	background-image: url(../img/okc7.jpg);
 }
 .carousel.carousel-fade .item{
 	-webkit-transform:opacity 1s linear;

@@ -14,10 +14,86 @@
                 <li><a href="{% url 'register' %}">Register</a></li>
 			    <li><a href="{% url 'login' %}">Login</a></li>
             {% else %}
-                <li><a href="#">Post Job</a></li>
+                <li><a href="{% url 'create_job' %}">Post Job</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
 			<li><a href="#">Contact us</a></li>
 		</ul>
 	</div>
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="margin-top-120">
+            {% for job in all_jobs %}
+            <div class="col-md-3">
+                <div class="panel panel-success">
+                    <div class="panel-heading">{{ job.title }}</div>
+                    <div class="panel-body" id="read">
+                        <form action="{% url 'view_job' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="job_id" value="{{ job.id }}" />
+                            {{ job.description|truncatechars:30 }}
+                            <button type="submit" class="button btn btn-xs btn-success buttonItems">
+                                <span class="glyphicon glyphicon-share-alt" aria-hidden="true"> Read more</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                        <b>Duration: {{ job.start_date }} - {{ job.end_date }}</b>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+        {% if all_jobs.has_other_pages %}
+        <ul class="pagination">
+            {% if all_jobs.has_previous %}
+              <li><a href="?page={{ all_jobs.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+
+            {% for i in users.paginator.page_range %}
+              {% if all_jobs.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if all_jobs.has_next %}
+              <li><a href="?page={{ all_jobs.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function() {
+        $("#read").click(function () {
+            var post_id = $(this).val();
+            console.log(post_id)
+
+            $.ajax({
+                url: '{% url "view_job" %}',
+                data: {
+                  'post_id': post_id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    alert("Here is your post.");
+                    alert(data);
+                }
+              });
+        });
+    });
+</script>
 {% endblock %}

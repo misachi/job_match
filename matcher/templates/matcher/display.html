@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %}
+	<div class="row navbar-right col-sm-4">
+		<ul class="navbar-nav nav">
+			<li class="active"><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Blog</a></li>
+			<li><a href="#">About</a></li>
+            {% if not user.is_authenticated %}
+                <li><a href="{% url 'register' %}">Register</a></li>
+			    <li><a href="{% url 'login' %}">Login</a></li>
+            {% else %}
+                <li><a href="{% url 'create_job' %}">Post Job</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% endif %}
+			<li><a href="#">Contact us</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="margin-top-120">
+        <div class="col-md-offset-3 col-md-5">
+            <div class="row">
+                <b class="h2">Job Title: {{ details.title }}</b><br>
+                <span class="h4">Duration <b class="small">
+                    {{ details.start_date }} - {{ details.end_date }}
+                </b></span>
+                <hr>
+                <p><b class="h3">Job Description</b></p>
+                <p>{{ details.description }}</p>
+                <b class="h3">Requirements</b>
+                <ol>
+                    {% for val in details.requirements %}
+                        {% if val != '' %}
+                            <li>{{ val }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
