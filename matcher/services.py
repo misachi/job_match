@@ -1,8 +1,20 @@
 from datetime import datetime
 
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 from matcher.models import JobPost, Potential
+
+
+def create_user(request, username, email, password):
+    User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+    )
+    user = authenticate(username=username, password=password)
+    login(request, user)
 
 
 def create_posts(user, data):
@@ -39,3 +51,20 @@ def create_potential(post, data):
         salary=data['salary'],
         edu_level=data['education'],
     )
+
+
+def update_jobpost(job_id, data):
+    dict_obj = {}
+    for key, val in data.items():
+        if val != '':
+            dict_obj[key] = val
+    dict_obj.pop('csrfmiddlewaretoken')
+    print(dict_obj)
+    print(job_id)
+    foo = JobPost.objects.filter(id=job_id).update(**dict_obj)
+    print(foo)
+
+
+def delete(post_id):
+    
+

@@ -1,18 +1,25 @@
 import json
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest, JsonResponse
+from django.http import (
+    HttpResponseForbidden,
+    HttpResponse,
+    HttpResponseNotAllowed,
+    HttpResponseBadRequest,
+)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db import transaction
 from django.contrib.auth import authenticate, login
+from django.db import transaction
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from matcher.services import (
+    create_user,
     create_posts,
-    create_potential
+    create_potential,
+    update_jobpost,
 )
-from matcher.forms import RegistrationForm, JobPostForm
+from matcher.forms import RegistrationForm, JobPostForm, UpdateForm
 from matcher.models import JobPost, Potential
 
 
@@ -55,13 +62,10 @@ def register(request):
             email = user_form.cleaned_data.get('email')
             password = user_form.cleaned_data.get('password')
 
-            User.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-            )
-            user = authenticate(username=username, password=password)
-            login(request, user)
+            #  All transactions must be committed to database i.e all or nothing
+            with transaction.atomic():
+                create_user(request, username, email, password)
+
             return redirect('home')
         else:
             return render(request, 'matcher/register.html', {'form': user_form})
@@ -72,13 +76,15 @@ def register(request):
 
 
 @login_required(login_url='login')
-@transaction.atomic
 def create_jobs(request):
+    if not request.user.has_perm('matcher.add_jobpost'):
+        return HttpResponseForbidden('User cannot create job post')
     if request.method == 'POST':
         jobs_form = JobPostForm(request.POST)
         user = request.user
         data = request.POST
-        create_posts(user, data)
+        with transaction.atomic():
+            create_posts(user, data)
         return redirect('home')
         # if jobs_form.is_valid():
         #
@@ -89,15 +95,36 @@ def create_jobs(request):
     return render(request, 'matcher/post.html', {'form': jobs_form})
 
 
+@login_required(login_url='login')
+def update_post(request, post_id):
+    user = request.user
+    if not user.has_perm('matcher.change_jobpost'):
+        return HttpResponseForbidden('User not allowed to edit post')
+
+    if request.method == 'POST':
+        form = UpdateForm(request.POST)
+        data = request.POST
+        # print(data)
+        with transaction.atomic():
+            update_jobpost(post_id, data)
+        return redirect('home')
+    else:
+        form = UpdateForm()
+        job_data = JobPost.objects.get(id=post_id)
+    return render(request, 'matcher/update.html', {'form': form, 'job_data': job_data})
+
+
+def delete_post(request, post_id):
+    user = request.user
+    if not user.has_perm('matcher.delete_jobpost'):
+        return HttpResponseForbidden('Users not allowed to delete post')
+
+
 def view_job(request):
     job_id = request.POST.get('job_id')
-    # print(job_id)
-    # print(request.POST)
     job = JobPost.objects.get(id=job_id)
-    # data = json.dumps([x for x in job])
-    # print(data)
-    # return JsonResponse(json.loads(data), safe=False)
     return render(request, 'matcher/display.html', {'details': job})
+
 
 def get_jobs(request, category):
     pass

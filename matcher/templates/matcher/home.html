@@ -40,13 +40,14 @@
                             </button>
                         </form>
                     </div>
+                    {% if user.is_authenticated %}
                     <div class="panel-footer">
-                        <b>Duration: {{ job.start_date }} - {{ job.end_date }}</b>
+                        <b><a href="{% url 'update' job.id %}">Update</a></b>
                     </div>
+                    {% endif %}
                 </div>
             </div>
-
-        {% endfor %}
+            {% endfor %}
 
         {% if all_jobs.has_other_pages %}
         <ul class="pagination">

@@ -140,3 +140,60 @@ class JobPostForm(forms.ModelForm):
     class Meta:
         model = JobPost
         fields = ['category', 'title', 'description', 'requirements', 'start_date', 'end_date']
+
+
+class UpdateForm(forms.ModelForm):
+    category = forms.ChoiceField(
+        label='Category',
+        choices=JOB_TYPE,
+        initial='',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'category'
+        }),
+        required=True
+    )
+    title = forms.CharField(
+        label='Job title',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Job title',
+            'name': 'title'
+        })
+    )
+    description = forms.CharField(
+        label='Description',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Job Description',
+            'name': 'description'
+        })
+    )
+    requirements = forms.CharField(
+        label='Requirements',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Job requirements',
+            'name': 'requirements'
+        })
+    )
+    start_date = forms.DateTimeField(
+        label='Start date',
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Application start date',
+            'name': 'start'
+        })
+    )
+    end_date = forms.DateTimeField(
+        label='End Date',
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Application end date',
+            'name': 'end'
+        })
+    )
+
+    class Meta:
+        model = JobPost
+        fields = ['category', 'title', 'description', 'requirements', 'start_date', 'end_date']
