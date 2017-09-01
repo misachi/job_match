@@ -9,6 +9,7 @@ from matcher.views import (
     get_jobs,
     save_potential,
     delete_post,
+    get_matched_applicants,
 
 )
 
@@ -20,4 +21,5 @@ urlpatterns = [
     url(r'^get_category/$', get_jobs, name='get_category'),
     url(r'^save_potential/(?P<job_id>[\w-]+)/$', save_potential, name='potential'),
     url(r'^delete_post/(?P<job_id>[\w-]+)/$', delete_post, name='delete'),
+    url(r'^matched/(?P<job_id>[\w-]+)/$', get_matched_applicants, name='matched'),
 ]

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Save Details{% endblock %}
+
+
+{% block nav %}
+	<div class="row navbar-right col-sm-4">
+		<ul class="navbar-nav nav">
+			<li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Blog</a></li>
+			<li><a href="#">About</a></li>
+            <li class="active"><a href="{% url 'create_job' %}">Post Job</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+			<li><a href="#">Contact us</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="margin-top-120">
+            <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Firs tname</th>
+            <th>Last name</th>
+            <th>Age</th>
+            <th>Nationality</th>
+            <th>Salary</th>
+            <th>Experience</th>
+            <th>Education</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for applicant in applicants %}
+          <tr>
+            <td>1</td>
+            <td>{{ applicant.first_name }}</td>
+            <td>{{ applicant.last_name }}</td>
+            <td>{{ applicant.dob }}</td>
+            <td>{{ applicant.nationality }}</td>
+            <td>{{ applicant.salary }}</td>
+            <td>{{ applicant.experience }}</td>
+            <td>{{ applicant.edu_level }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      </div>
+            <p></p>
+
+    </div>
+</div>
+{% endblock %}
+
+
+
+

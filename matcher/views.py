@@ -1,13 +1,18 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.http import (
     HttpResponseForbidden,
     HttpResponse,
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
+    Http404,
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.contrib.auth import authenticate, login
+from django.utils import timezone
 from django.db import transaction
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -17,10 +22,12 @@ from matcher.services import (
     create_potential,
     update_jobpost,
     delete,
-    get_jobs_per_category
+    get_jobs_per_category, get_matches,
 )
-from matcher.forms import RegistrationForm, JobPostForm, UpdateForm, PotentialForm, SearchForm
-from matcher.models import JobPost
+from matcher.forms import (RegistrationForm, JobPostForm,
+                           UpdateForm, PotentialForm, SearchForm, MatchedForm)
+from matcher.models import (JobPost, DEGREE, MASTERS, PHD,
+                            TERTIARY_COLLEGE, SINGLE, MARRIED)
 
 
 def user_login(request):
@@ -160,9 +167,41 @@ def save_potential(request, job_id):
 
 
 @login_required(login_url='login')
-def get_applications(request):
+def get_matched_applicants(request, job_id):
     user = request.user
     if not user.has_perm('matcher.can_view_potential'):
-        return HttpResponseForbidden('User not allowed to view applicants')
-    return render(request, 'matcher/applications.html', {})
+        return HttpResponseForbidden('User not allowed to view applications')
+
+    """
+    User should choose at least 3 parameters to filter applicants
+    """
+    if request.method == 'POST':
+        app_form = MatchedForm(request.POST)
+        if app_form.is_valid():
+            user = request.user
+            age = app_form.cleaned_data.get('age')
+            marital_status = app_form.cleaned_data.get('marital_status')
+            experience = app_form.cleaned_data.get('experience')
+            salary = app_form.cleaned_data.get('salary')
+            edu_level = app_form.cleaned_data.get('edu_level')
+
+            today = timezone.make_aware(datetime.today())
+
+            if age is None:
+                age = 18
+
+            birth_year = today.year - age
+
+            applicants = get_matches(user, job_id, birth_year, marital_status,
+                                     experience, salary, edu_level)
+            if applicants is None:
+                return HttpResponseForbidden('This is not your job post. Please look '
+                                             'for post that you have created')
+            return render(request, 'matcher/matched.html', {'applicants': applicants})
+        else:
+            return render(request, 'matcher/applications.html', {'form': app_form})
+    else:
+        app_form = MatchedForm()
+
+    return render(request, 'matcher/applications.html', {'form': app_form})
 

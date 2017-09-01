@@ -21,7 +21,6 @@
 {% block body %}
 
 <div class="background-image">
-<!--<div class="container auto_animate">-->
 <div class="container">
 	<div class="maximum-width col-md-offset-3 margin-top-120 col-md-6">
 		<div class="page-header" id="gallery">
@@ -36,9 +35,6 @@
                     <div class="col-md-10">
                         {{ field }}
                     </div>
-                    <!--{% if field.help_text %}-->
-                        <!--<span class="help-block">{{ field.help_text|safe }}</span>-->
-                    <!--{% endif %}-->
                     {% for error in field.errors %}
                         <label class="control-label">{{ error }}</label>
                     {% endfor %}

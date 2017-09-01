@@ -47,7 +47,7 @@
         </div>
         <br>
         {% for job in all_jobs %}
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-success">
                 <div class="panel-heading">{{ job.title }}</div>
                 <div class="panel-body" id="read">
@@ -59,10 +59,13 @@
                             <span class="glyphicon glyphicon-share-alt" aria-hidden="true"> Read more</span>
                         </button>
                     </form>
+                    <br>
                 </div>
                 {% if user.is_authenticated %}
                 <div class="panel-footer">
-                    <b><a href="{% url 'update' job.id %}">Update</a></b>
+                    <b class="col-md-2"><a href="{% url 'update' job.id %}">Update</a></b>
+                    <b class="col-md-offset-2"><a href="{% url 'update' job.id %}">Applicants</a></b>
+                    <b class="col-md-offset-2"><a href="{% url 'matched' job.id %}">Matched</a></b>
                 </div>
                 {% else %}
                 <div class="panel-footer">

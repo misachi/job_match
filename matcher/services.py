@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.utils import timezone
 from django.contrib.auth.models import User, Permission
+from django.db.models import Q
 from django.contrib.auth import authenticate, login
 from django.contrib.contenttypes.models import ContentType
 
@@ -93,4 +94,32 @@ def get_jobs_per_category(category):
         return None
     return jobs
 
+
+def get_matches(user,  job_id, birth_year, marital_status, experience, salary, edu_level):
+    try:
+        verify_user = JobPost.objects.get(id=job_id)
+    except:
+        raise JobPost.DoesNotExist
+
+    if verify_user.user.id != user.id:
+        return None
+    nationality = 'Kenya'
+
+    birth_yr_q = Q(dob__year__lte=birth_year)
+    marital_q = Q(marital_status=marital_status)
+    nationality_q = Q(nationality=nationality)
+    experience_q = Q(experience__gte=experience)
+    salary_q = Q(salary__lte=salary)
+    edu_level_q = Q(edu_level=edu_level)
+
+    applicants = Potential.objects.filter(
+        birth_yr_q &
+        marital_q &
+        nationality_q &
+        experience_q &
+        salary_q &
+        edu_level_q
+    )
+
+    return applicants
 

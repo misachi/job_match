@@ -70,7 +70,7 @@ class Potential(models.Model):
     phone = models.CharField(max_length=12)
     email = models.EmailField()
     dob = models.DateField()
-    nationality = models.CharField(max_length=20)
+    nationality = models.CharField(max_length=20, default='Kenya')
     marital_status = models.CharField(max_length=10, choices=MARITAL_STATUS,
                                       default=SINGLE)
     experience = models.PositiveIntegerField()

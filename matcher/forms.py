@@ -299,3 +299,50 @@ class SearchForm(forms.ModelForm):
     class Meta:
         model = JobPost
         fields = ['category']
+
+
+class MatchedForm(forms.ModelForm):
+    age = forms.IntegerField(
+        label='Age',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Minimum required age',
+            'name': 'age'
+        }),
+    )
+    marital_status = forms.ChoiceField(
+        label='Marital status',
+        choices=MARITAL_STATUS,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'marital_status'
+        }),
+    )
+    experience = forms.IntegerField(
+        label='Experience',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Minimum work experience',
+            'name': 'experience'
+        }),
+    )
+    salary = forms.DecimalField(
+        label='Salary',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Minimum salary expectations',
+            'name': 'salary'
+        }),
+    )
+    edu_level = forms.ChoiceField(
+        label='Education',
+        choices=EDUCATION,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'edu_level',
+        }),
+    )
+
+    class Meta:
+        model = Potential
+        fields = ['age', 'marital_status', 'experience', 'salary', 'edu_level']
