@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.shortcuts import render, redirect
 from django.http import (
     HttpResponseForbidden,
@@ -9,7 +7,6 @@ from django.http import (
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from django.utils import timezone
 from django.db import transaction
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -186,21 +183,13 @@ def get_matched_applicants(request, job_id):
     if request.method == 'POST':
         app_form = MatchedForm(request.POST)
         if app_form.is_valid():
-            user = request.user
             age = app_form.cleaned_data.get('age')
             marital_status = app_form.cleaned_data.get('marital_status')
             experience = app_form.cleaned_data.get('experience')
             salary = app_form.cleaned_data.get('salary')
             edu_level = app_form.cleaned_data.get('edu_level')
 
-            today = timezone.make_aware(datetime.today())
-
-            if age is None:
-                age = 18
-
-            birth_year = today.year - age
-
-            applicants = get_matches(birth_year, marital_status,
+            applicants = get_matches(age, marital_status,
                                      experience, salary, edu_level)
 
             return render(request, 'matcher/matched.html', {'applicants': applicants})

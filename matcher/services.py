@@ -127,19 +127,16 @@ def verify_job(user, job_id):
     except:
         raise JobPost.DoesNotExist
 
-    print(verify_user.user.id)
-    print(user.id)
-
     if verify_user.user.id == user.id:
         return True
     else:
         return None
 
 
-def get_matches(birth_year, marital_status, experience, salary, edu_level):
+def get_matches(age, marital_status, experience, salary, edu_level):
     """
     
-    :param birth_year: year user was born
+    :param age: minimum required age of applicant
     :param marital_status: married or single
     :param experience: active employment
     :param salary: salary expectations
@@ -147,6 +144,12 @@ def get_matches(birth_year, marital_status, experience, salary, edu_level):
     :return: Matched applicants for the job
     """
     nationality = 'Kenya'
+
+    today = timezone.make_aware(datetime.today())
+    if age is None:
+        age = 18
+
+    birth_year = today.year - age
 
     birth_yr_q = Q(dob__year__lte=birth_year)
     marital_q = Q(marital_status__in=[marital_status] if marital_status is not None else [SINGLE, MARRIED])

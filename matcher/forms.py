@@ -320,6 +320,7 @@ class MatchedForm(forms.ModelForm):
             'placeholder': 'Minimum required age',
             'name': 'age'
         }),
+        required=False
     )
     marital_status = forms.ChoiceField(
         label='Marital status',
@@ -328,6 +329,7 @@ class MatchedForm(forms.ModelForm):
             'class': 'form-control',
             'name': 'marital_status'
         }),
+        required=False
     )
     experience = forms.IntegerField(
         label='Experience',
@@ -336,6 +338,7 @@ class MatchedForm(forms.ModelForm):
             'placeholder': 'Minimum work experience',
             'name': 'experience'
         }),
+        required=False
     )
     salary = forms.DecimalField(
         label='Salary',
@@ -352,6 +355,7 @@ class MatchedForm(forms.ModelForm):
             'class': 'form-control',
             'name': 'edu_level',
         }),
+        required=False
     )
 
     class Meta:
