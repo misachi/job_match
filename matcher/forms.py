@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from matcher.models import JobPost, Potential, JOB_TYPE,MARITAL_STATUS, EDUCATION
 
+from matcher.services import REG_TYPE
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -52,6 +54,15 @@ class RegistrationForm(forms.ModelForm):
         max_length=75
 
     )
+    reg_type = forms.ChoiceField(
+        label='Reg. Type',
+        choices=REG_TYPE,
+        initial='',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'name': 'reg_type'
+        }),
+    )
     password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(attrs={
@@ -82,7 +93,7 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'confirmpassword']
+        fields = ['username', 'email', 'reg_type', 'password', 'confirmpassword']
 
 
 class JobPostForm(forms.ModelForm):

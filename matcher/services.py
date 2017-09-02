@@ -10,32 +10,44 @@ from matcher.models import (
     JobPost,
     Potential,
     JOB_TYPE,
+    SINGLE,
+    DEGREE,
+    MARRIED
+)
+
+EMPLOYER = 'employer'
+EMPLOYEE = 'employee'
+
+REG_TYPE = (
+    (EMPLOYER, 'Employer'),
+    (EMPLOYEE, 'Job seeker')
 )
 
 
-def add_user_permissions(user, codename, name, model_obj):
-    ct = ContentType.objects.get_for_model(type(model_obj))
-    Permission.objects.create(
-        codename=codename,
-        name=name,
-        content_type=ct
-    )
-    if user.is_active and user.is_staff:
-        pass
+def add_user_permissions(user, permissions):
+    # permission_obj = Permission.objects.get(name=permissions)
+    if user.is_active:
+        result = []
+        all_perms = Permission.objects.all()
+        for perm in permissions:
+            perm_obj = all_perms.get(name=perm)
+            result.append(perm_obj)
+        user.user_permissions.set(result)
 
 
-def create_user(request, username, email, password):
+def create_user(request, username, email, password, reg_type, permissions=None):
     User.objects.create_user(
         username=username,
         email=email,
         password=password,
     )
     user = authenticate(username=username, password=password)
+    if reg_type == EMPLOYER:
+        add_user_permissions(user, permissions)
     login(request, user)
 
 
 def create_posts(user, data):
-    print('Were here')
     requirements = data.getlist('requirements')
 
     start = timezone.make_aware(datetime.strptime(
@@ -106,11 +118,11 @@ def get_matches(user,  job_id, birth_year, marital_status, experience, salary, e
     nationality = 'Kenya'
 
     birth_yr_q = Q(dob__year__lte=birth_year)
-    marital_q = Q(marital_status=marital_status)
+    marital_q = Q(marital_status__in=[marital_status] if marital_status is not None else [SINGLE, MARRIED])
     nationality_q = Q(nationality=nationality)
-    experience_q = Q(experience__gte=experience)
+    experience_q = Q(experience__gte=experience if experience is not None else 0)
     salary_q = Q(salary__lte=salary)
-    edu_level_q = Q(edu_level=edu_level)
+    edu_level_q = Q(edu_level=edu_level if edu_level is not None else DEGREE)
 
     applicants = Potential.objects.filter(
         birth_yr_q &

@@ -21,11 +21,10 @@
 {% block body %}
 <div class="container">
     <div class="margin-top-120">
-            <div class="table-responsive">
+        <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
-            <th>No.</th>
             <th>Firs tname</th>
             <th>Last name</th>
             <th>Age</th>
@@ -38,7 +37,6 @@
         <tbody>
         {% for applicant in applicants %}
           <tr>
-            <td>1</td>
             <td>{{ applicant.first_name }}</td>
             <td>{{ applicant.last_name }}</td>
             <td>{{ applicant.dob }}</td>
@@ -54,6 +52,12 @@
             <p></p>
 
     </div>
+</div>
+
+<div class="row">
+    <button type="submit" class="button btn btn-xs btn-success buttonItems">
+        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"> Read more</span>
+    </button>
 </div>
 {% endblock %}
 

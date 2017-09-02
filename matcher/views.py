@@ -3,14 +3,11 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import (
     HttpResponseForbidden,
-    HttpResponse,
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
-    Http404,
 )
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.db.models import Q
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
 from django.db import transaction
@@ -68,10 +65,17 @@ def register(request):
             username = user_form.cleaned_data.get('username')
             email = user_form.cleaned_data.get('email')
             password = user_form.cleaned_data.get('password')
+            reg_type = user_form.cleaned_data.get('reg_type')
+            company_name = user_form.cleaned_data.get('company')
+
+            permissions = ['Can view potential employees applications',
+                           'Can change job post', 'Can delete job post',
+                           'Can add job post']
 
             #  All transactions must be committed to database i.e all or nothing
             with transaction.atomic():
-                create_user(request, username, email, password)
+                create_user(request, username, email, password,
+                            reg_type, permissions)
 
             return redirect('home')
         else:
@@ -85,7 +89,7 @@ def register(request):
 @login_required(login_url='login')
 def create_jobs(request):
     if not request.user.has_perm('matcher.add_jobpost'):
-        return HttpResponseForbidden('User cannot create job post')
+        return HttpResponseForbidden('User not authorised to create job post')
     if request.method == 'POST':
         jobs_form = JobPostForm(request.POST)
         user = request.user
@@ -102,7 +106,7 @@ def create_jobs(request):
 def update_post(request, post_id):
     user = request.user
     if not user.has_perm('matcher.change_jobpost'):
-        return HttpResponseForbidden('User not allowed to edit post')
+        return HttpResponseForbidden('User not authorised to edit post')
 
     if request.method == 'POST':
         form = UpdateForm(request.POST)
@@ -120,7 +124,7 @@ def update_post(request, post_id):
 def delete_post(request, post_id):
     user = request.user
     if not user.has_perm('matcher.delete_jobpost'):
-        return HttpResponseForbidden('Users not allowed to delete post')
+        return HttpResponseForbidden('User not authorised to delete post')
 
     try:
         delete(post_id)
@@ -170,7 +174,7 @@ def save_potential(request, job_id):
 def get_matched_applicants(request, job_id):
     user = request.user
     if not user.has_perm('matcher.can_view_potential'):
-        return HttpResponseForbidden('User not allowed to view applications')
+        return HttpResponseForbidden('User not authorised to view applications')
 
     """
     User should choose at least 3 parameters to filter applicants
@@ -205,3 +209,7 @@ def get_matched_applicants(request, job_id):
 
     return render(request, 'matcher/applications.html', {'form': app_form})
 
+
+@login_required(login_url='login')
+def send_invitation_email(request):
+    pass
