@@ -29,6 +29,7 @@ MESSAGE = 'Greetings applicant, we are happy to inform you that you have been ' 
           'shortlisted for this position. ' \
           'We hereby invite for an interview tomorrow at 1000hrs.'
 
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -44,6 +45,10 @@ def user_login(request):
 
 
 def index(request):
+    """
+    Home page view
+    :param request:  
+    """
     jobs = JobPost.objects.all().order_by('-created')
     paginator = Paginator(jobs, 12)
     page = request.GET.get('page')
@@ -68,7 +73,6 @@ def register(request):
             email = user_form.cleaned_data.get('email')
             password = user_form.cleaned_data.get('password')
             reg_type = user_form.cleaned_data.get('reg_type')
-            company_name = user_form.cleaned_data.get('company')
 
             permissions = ['Can view potential employees applications',
                            'Can change job post', 'Can delete job post',
@@ -90,6 +94,10 @@ def register(request):
 
 @login_required(login_url='login')
 def create_jobs(request):
+    """
+    Permissions: only users with add_jobpost permission can create new job posts
+    :param request:  
+    """
     if not request.user.has_perm('matcher.add_jobpost'):
         return HttpResponseForbidden('User not authorised to create job post')
     if request.method == 'POST':
@@ -106,6 +114,12 @@ def create_jobs(request):
 
 @login_required(login_url='login')
 def update_post(request, post_id):
+    """
+    Permissions: only users with change_jobpost permission can update new job posts
+    :param request: 
+    :param post_id: id for post to update
+    :return: 
+    """
     user = request.user
     if not user.has_perm('matcher.change_jobpost'):
         return HttpResponseForbidden('User not authorised to edit post')
@@ -124,6 +138,11 @@ def update_post(request, post_id):
 
 @login_required(login_url='login')
 def delete_post(request, post_id):
+    """
+    Permissions: only users with delete_jobpost permission can delete job posts
+    :param request: 
+    :param post_id: job post to delete 
+    """
     user = request.user
     if not user.has_perm('matcher.delete_jobpost'):
         return HttpResponseForbidden('User not authorised to delete post')
@@ -158,6 +177,12 @@ def get_jobs(request):
 
 
 def save_potential(request, job_id):
+    """
+    
+    :param request: 
+    :param job_id: the id of the job being applied for
+    Description: Method creates details for all applicants
+    """
     if request.method == 'POST':
         pot_form = PotentialForm(request.POST)
         if pot_form.is_valid():
@@ -174,6 +199,12 @@ def save_potential(request, job_id):
 
 @login_required(login_url='login')
 def get_matched_applicants(request, job_id):
+    """
+    
+    :param request: 
+    :param job_id: id for the specified job post
+    :return: list of matched job posts
+    """
     user = request.user
     if not user.has_perm('matcher.can_view_potential'):
         return HttpResponseForbidden('User not authorised to view applications')
@@ -208,6 +239,11 @@ def get_matched_applicants(request, job_id):
 
 @login_required(login_url='login')
 def send_invitation_email(request):
+    """
+    
+    :param request: 
+    :return: empty HttpResponse object
+    """
     from matcher.models import Potential
     app_id = request.POST['mail']
 

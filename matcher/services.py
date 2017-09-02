@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User, Permission
 from django.db.models import Q
 from django.contrib.auth import authenticate, login
-from django.contrib.contenttypes.models import ContentType
 
 from matcher.models import (
     JobPost,
@@ -48,6 +47,10 @@ def create_user(request, username, email, password, reg_type, permissions=None):
         password=password,
     )
     user = authenticate(username=username, password=password)
+
+    """
+    Only grant permissions if user is an an employer 
+    """
     if reg_type == EMPLOYER:
         add_user_permissions(user, permissions)
     login(request, user)
