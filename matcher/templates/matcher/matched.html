@@ -42,24 +42,48 @@
             <td>{{ applicant.dob }}</td>
             <td>{{ applicant.nationality }}</td>
             <td>{{ applicant.salary }}</td>
-            <td>{{ applicant.experience }}</td>
+            <td>{{ applicant.experience }} years</td>
             <td>{{ applicant.edu_level }}</td>
+            <td>
+                <form method="post" action="" role="form" id="send_form">
+                    {% csrf_token %}
+                    <input type="hidden" name="send_mail" id="mail" value="{{ applicant.id }}">
+                    <button type="submit" class="button btn btn-xs btn-success buttonItems">
+                        <span class="glyphicon glyphicon-share-alt" aria-hidden="true">Send Mail</span>
+                    </button>
+                </form>
+            </td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
       </div>
-            <p></p>
-
     </div>
 </div>
-
-<div class="row">
-    <button type="submit" class="button btn btn-xs btn-success buttonItems">
-        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"> Read more</span>
-    </button>
-</div>
 {% endblock %}
+
+{% block javascript %}
+  <script>
+    $(document).on('submit', '#send_form', function (e) {
+      e.preventDefault();
+      var receiver = $('#mail').val();
+
+
+      $.ajax({
+        type: 'POST',
+        url: '{% url 'send_email' %}',
+        data: {
+            'mail': receiver,
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(){
+            alert("Email sent successfully")
+        }
+      })
+    });
+  </script>
+{% endblock %}
+
 
 
 

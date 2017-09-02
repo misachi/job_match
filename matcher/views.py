@@ -3,6 +3,7 @@ from django.http import (
     HttpResponseForbidden,
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
+    HttpResponse
 )
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -23,6 +24,10 @@ from matcher.forms import (RegistrationForm, JobPostForm,
 from matcher.models import (JobPost, DEGREE, MASTERS, PHD,
                             TERTIARY_COLLEGE, SINGLE, MARRIED)
 
+SUBJECT = 'YOUR JOB APPLICATION'
+MESSAGE = 'Greetings applicant, we are happy to inform you that you have been ' \
+          'shortlisted for this position. ' \
+          'We hereby invite for an interview tomorrow at 1000hrs.'
 
 def user_login(request):
     if request.method == 'POST':
@@ -203,4 +208,11 @@ def get_matched_applicants(request, job_id):
 
 @login_required(login_url='login')
 def send_invitation_email(request):
-    pass
+    from matcher.models import Potential
+    app_id = request.POST['mail']
+
+    app_email = Potential.objects.get(id=app_id)
+
+    sender = request.user.email
+    send_mail(SUBJECT, MESSAGE, sender, [app_email.email])
+    return HttpResponse()

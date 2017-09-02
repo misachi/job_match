@@ -102,26 +102,3 @@
     </div>
 </div>
 {% endblock %}
-
-{% block javascript %}
-<script>
-    $(document).ready(function() {
-        $("#read").click(function () {
-            var post_id = $(this).val();
-            console.log(post_id)
-
-            $.ajax({
-                url: '{% url "view_job" %}',
-                data: {
-                  'post_id': post_id
-                },
-                dataType: 'json',
-                success: function (data) {
-                    alert("Here is your post.");
-                    alert(data);
-                }
-              });
-        });
-    });
-</script>
-{% endblock %}
