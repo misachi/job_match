@@ -19,7 +19,7 @@ from matcher.services import (
     create_potential,
     update_jobpost,
     delete,
-    get_jobs_per_category, get_matches,
+    get_jobs_per_category, get_matches, verify_job,
 )
 from matcher.forms import (RegistrationForm, JobPostForm,
                            UpdateForm, PotentialForm, SearchForm, MatchedForm)
@@ -179,6 +179,10 @@ def get_matched_applicants(request, job_id):
     """
     User should choose at least 3 parameters to filter applicants
     """
+    verify = verify_job(user, job_id)
+    if verify is None:
+        return HttpResponseForbidden('This is not your job post. Please look '
+                                     'for post that you have created')
     if request.method == 'POST':
         app_form = MatchedForm(request.POST)
         if app_form.is_valid():
@@ -196,11 +200,9 @@ def get_matched_applicants(request, job_id):
 
             birth_year = today.year - age
 
-            applicants = get_matches(user, job_id, birth_year, marital_status,
+            applicants = get_matches(birth_year, marital_status,
                                      experience, salary, edu_level)
-            if applicants is None:
-                return HttpResponseForbidden('This is not your job post. Please look '
-                                             'for post that you have created')
+
             return render(request, 'matcher/matched.html', {'applicants': applicants})
         else:
             return render(request, 'matcher/applications.html', {'form': app_form})

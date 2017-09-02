@@ -25,6 +25,12 @@ REG_TYPE = (
 
 
 def add_user_permissions(user, permissions):
+    """
+    
+    :param user: Current user object
+    :param permissions: all permissions to to user
+    :return: None
+    """
     # permission_obj = Permission.objects.get(name=permissions)
     if user.is_active:
         result = []
@@ -99,7 +105,11 @@ def delete(post_id):
 
 
 def get_jobs_per_category(category):
-    # print([x.category for x in JobPost.objects.all()])
+    """
+    
+    :param category: Category of jobs to filter on
+    :return: Filtered jobs per category
+    """
     val = [x[0] for x in JOB_TYPE if x[1] == category]
     jobs = JobPost.objects.filter(category=val[0])
     if not jobs.exists():
@@ -107,14 +117,35 @@ def get_jobs_per_category(category):
     return jobs
 
 
-def get_matches(user,  job_id, birth_year, marital_status, experience, salary, edu_level):
+def verify_job(user, job_id):
+    """
+    
+    Method checks if current user created job 
+    """
     try:
         verify_user = JobPost.objects.get(id=job_id)
     except:
         raise JobPost.DoesNotExist
 
-    if verify_user.user.id != user.id:
+    print(verify_user.user.id)
+    print(user.id)
+
+    if verify_user.user.id == user.id:
+        return True
+    else:
         return None
+
+
+def get_matches(birth_year, marital_status, experience, salary, edu_level):
+    """
+    
+    :param birth_year: year user was born
+    :param marital_status: married or single
+    :param experience: active employment
+    :param salary: salary expectations
+    :param edu_level: Degree, Masters etc
+    :return: Matched applicants for the job
+    """
     nationality = 'Kenya'
 
     birth_yr_q = Q(dob__year__lte=birth_year)
