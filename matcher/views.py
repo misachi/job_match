@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import (
     HttpResponseForbidden,
     HttpResponseNotAllowed,
+    Http404,
     HttpResponseBadRequest,
     HttpResponse
 )
@@ -28,20 +29,6 @@ SUBJECT = 'YOUR JOB APPLICATION'
 MESSAGE = 'Greetings applicant, we are happy to inform you that you have been ' \
           'shortlisted for this position. ' \
           'We hereby invite for an interview tomorrow at 1000hrs.'
-
-
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        try:
-            login(request, user)
-        except:
-            return HttpResponseBadRequest
-
-        return redirect('/')
-    return HttpResponseNotAllowed
 
 
 def index(request):
@@ -85,6 +72,7 @@ def register(request):
 
             return redirect('home')
         else:
+            # return HttpResponseBadRequest()
             return render(request, 'matcher/register.html', {'form': user_form})
     else:
         user_form = RegistrationForm()
@@ -150,7 +138,8 @@ def delete_post(request, post_id):
     try:
         delete(post_id)
     except JobPost.DoesNotExist:
-        pass
+        Http404()
+    return HttpResponse()
 
 
 def view_job(request):
@@ -171,7 +160,7 @@ def get_jobs(request):
     jobs = get_jobs_per_category(category)
 
     if jobs is None:
-        return HttpResponseBadRequest('Jobs matching query do not exist')
+        return Http404('Jobs matching query do not exist')
 
     return render(request, 'matcher/categories.html', {'jobs': jobs})
 
@@ -247,8 +236,8 @@ def send_invitation_email(request):
     from matcher.models import Potential
     app_id = request.POST['mail']
 
-    app_email = Potential.objects.get(id=app_id)
+    applicant = Potential.objects.get(id=app_id)
 
     sender = request.user.email
-    send_mail(SUBJECT, MESSAGE, sender, [app_email.email])
+    send_mail(SUBJECT, MESSAGE, sender, [applicant.email])
     return HttpResponse()

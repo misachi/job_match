@@ -115,8 +115,11 @@ def get_jobs_per_category(category):
     :param category: Category of jobs to filter on
     :return: Filtered jobs per category
     """
-    val = [x[0] for x in JOB_TYPE if x[1] == category]
-    jobs = JobPost.objects.filter(category=val[0])
+    try:
+        val = [x[0] for x in JOB_TYPE if x[1] == category][0]
+    except IndexError:
+        val = None
+    jobs = JobPost.objects.filter(category=val)
     if not jobs.exists():
         return None
     return jobs

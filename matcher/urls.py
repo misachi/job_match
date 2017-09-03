@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
 from matcher.views import (
-    user_login,
     register,
     create_jobs,
     view_job,
