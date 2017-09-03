@@ -225,7 +225,7 @@ def get_matched_applicants(request, job_id):
             salary = app_form.cleaned_data.get('salary')
             edu_level = app_form.cleaned_data.get('edu_level')
 
-            applicants = get_matches(age, marital_status,
+            applicants = get_matches(job_id, age, marital_status,
                                      experience, salary, edu_level)
 
             return render(request, 'matcher/matched.html', {'applicants': applicants})

@@ -10,12 +10,16 @@
 			<li class="active"><a href="{% url 'home' %}">Home</a></li>
             <li><a href="#">Blog</a></li>
 			<li><a href="#">About</a></li>
-            {% if not user.is_authenticated %}
+            {% if user.is_authenticated %}
+                {% if user.is_staff is False %}
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'create_job' %}">Post Job</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% endif %}
+            {% else %}
                 <li><a href="{% url 'register' %}">Register</a></li>
 			    <li><a href="{% url 'login' %}">Login</a></li>
-            {% else %}
-                <li><a href="{% url 'create_job' %}">Post Job</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
 			<li><a href="#">Contact us</a></li>
 		</ul>
@@ -61,7 +65,7 @@
                     </form>
                     <br>
                 </div>
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and user.is_staff %}
                 <div class="panel-footer">
                     <b class="col-md-2"><a href="{% url 'update' job.id %}">Update</a></b>
                     <b class="col-md-offset-2"><a href="{% url 'update' job.id %}">Applicants</a></b>

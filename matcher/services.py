@@ -41,7 +41,7 @@ def add_user_permissions(user, permissions):
 
 
 def create_user(request, username, email, password, reg_type, permissions=None):
-    User.objects.create_user(
+    user_obj = User.objects.create_user(
         username=username,
         email=email,
         password=password,
@@ -49,10 +49,12 @@ def create_user(request, username, email, password, reg_type, permissions=None):
     user = authenticate(username=username, password=password)
 
     """
-    Only grant permissions if user is an an employer 
+    Only grant permissions if user is an employer 
     """
     if reg_type == EMPLOYER:
         add_user_permissions(user, permissions)
+        user_obj.is_staff = True
+        user_obj.save(update_fields=['is_staff'])
     login(request, user)
 
 
@@ -136,7 +138,7 @@ def verify_job(user, job_id):
         return None
 
 
-def get_matches(age, marital_status, experience, salary, edu_level):
+def get_matches(job_id, age, marital_status, experience, salary, edu_level):
     """
     
     :param age: minimum required age of applicant
@@ -154,6 +156,7 @@ def get_matches(age, marital_status, experience, salary, edu_level):
 
     birth_year = today.year - age
 
+    jobpost_id = Q(job_post_id=job_id)
     birth_yr_q = Q(dob__year__lte=birth_year)
     marital_q = Q(marital_status__in=[marital_status] if marital_status is not None else [SINGLE, MARRIED])
     nationality_q = Q(nationality=nationality)
@@ -162,6 +165,7 @@ def get_matches(age, marital_status, experience, salary, edu_level):
     edu_level_q = Q(edu_level=edu_level if edu_level is not None else DEGREE)
 
     applicants = Potential.objects.filter(
+        jobpost_id &
         birth_yr_q &
         marital_q &
         nationality_q &
