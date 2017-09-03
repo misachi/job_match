@@ -9,7 +9,7 @@ from matcher.views import (register, create_jobs, update_post, index, delete_pos
                            view_job, get_jobs, save_potential, get_matched_applicants,
                            send_invitation_email)
 from matcher.forms import RegistrationForm
-from matcher.models import JOB_TYPE
+from matcher.models import JOB_TYPE, DEGREE, SINGLE
 
 pytestmark = pytest.mark.django_db
 
@@ -198,11 +198,11 @@ class TestAuthentication:
         post = db_jobpost
         potential = db_potential
         data = {
-            'salary': potential.salary,
+            'salary': 1000,
             'age': 20,
-            'marital_status': potential.marital_status,
-            'experience': potential.experience,
-            'edu_level': potential.edu_level
+            'marital_status': SINGLE,
+            'experience': 3,
+            'edu_level': DEGREE
         }
         req = RequestFactory().post('/', data=data)
         req.user = user
