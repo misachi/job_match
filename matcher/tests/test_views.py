@@ -1,4 +1,5 @@
 import pytest
+from uuid import uuid4
 from django.core import mail
 from django.test import RequestFactory
 from mixer.backend.django import mixer
@@ -140,6 +141,14 @@ class TestAuthentication:
         assert '/' in resp.url, 'Should check if redirect url is home'
         assert resp.status_code == 302, 'Should confirm redirect after update'
 
+    def test_delete_post_not_exist(self, db_user, db_jobpost):
+        req = RequestFactory().post('/')
+        req.user = db_user
+        req.user.is_superuser = True
+        random_uuid = uuid4()
+        resp = delete_post(req, random_uuid)
+        assert isinstance(resp, Http404), 'Should check Http404 error thrown when object does not exist'
+
     def test_delete_post(self, db_user, db_jobpost):
         user = db_user
         post = db_jobpost
@@ -175,6 +184,18 @@ class TestAuthentication:
         resp = get_jobs(req)
         assert resp.status_code == 200, 'Should check matched jobs are returned'
 
+    def test_save_potential_form_invalid(self, db_jobpost):
+        req = RequestFactory().post('/')
+        resp = save_potential(req, db_jobpost.id)
+        assert resp.status_code == 200, 'Should check empty form loaded successfully when form is invalid'
+        assert b'Save Potential Employee' in resp.content, 'Should check correct page loaded when form is invalid'
+
+    def test_save_potential_get_method(self, db_jobpost):
+        req = RequestFactory().get('/')
+        resp = save_potential(req, db_jobpost.id)
+        assert resp.status_code == 200, 'Should check 200 status code for empty form loaded when get method is used'
+        assert b'Save Potential Employee' in resp.content, 'Should check correct page loaded when get method is used'
+
     def test_save_potential(self, db_jobpost):
         post = db_jobpost
         data = {
@@ -196,7 +217,6 @@ class TestAuthentication:
     def test_get_matched_applicants(self, db_user, db_jobpost, db_potential):
         user = db_user
         post = db_jobpost
-        potential = db_potential
         data = {
             'salary': 1000,
             'age': 20,

@@ -134,11 +134,15 @@ def delete_post(request, post_id):
     user = request.user
     if not user.has_perm('matcher.delete_jobpost'):
         return HttpResponseForbidden('User not authorised to delete post')
+    # post = delete(post_id)
+    # if not post:
+    #     return Http404()
+    # return HttpResponse()
 
     try:
         delete(post_id)
     except JobPost.DoesNotExist:
-        Http404()
+        return Http404()
     return HttpResponse()
 
 
