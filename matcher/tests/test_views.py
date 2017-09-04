@@ -231,16 +231,53 @@ class TestAuthentication:
         assert resp.status_code == 200, 'Should check matching applicants are returned to user'
         assert b'Matched' in resp.content, 'Should check correctness of matched url'
 
-    def test_get_matched_applicants_invalid_form(self, db_user, db_jobpost):
-        user = db_user
-        post = db_jobpost
-        data = {}
+        data = {
+            'salary': 1000,
+            'marital_status': SINGLE,
+            'experience': 3,
+            'edu_level': DEGREE
+        }
         req = RequestFactory().post('/', data=data)
         req.user = user
         req.user.is_superuser = True
         resp = get_matched_applicants(req, post.id)
+        assert resp.status_code == 200, 'Should check if age not in payload age is set to constant 18'
+
+    def test_get_matched_applicants_get_method(self,  db_user,  db_jobpost):
+        req = RequestFactory().get('/')
+        req.user = db_user
+        req.user.is_superuser = True
+        resp = get_matched_applicants(req, db_jobpost.id)
+        assert resp.status_code == 200, 'Should check correct page loaded when wrong request method is used'
+        assert b'Applications' in resp.content, 'Should check correctness of page loaded when wrong request method is used'
+
+    def test_get_matched_applicants_invalid_form(self, db_user,  db_jobpost):
+        user = db_user
+        post = db_jobpost
+        data = {}
+        req = RequestFactory().post('/', data=data)
+        req.user = AnonymousUser()
+        resp = get_matched_applicants(req, post.id)
+        assert resp.status_code == 302, 'Should check user not logged in can"t access the view function'
+        assert 'login' in resp.url, 'Should check not logged in user redirected to login page'
+
+        req.user = user
+        resp = get_matched_applicants(req, post.id)
+        assert resp.status_code == 403, 'Should check logged in user without view permissions cannot view applicants'
+
+        req.user.is_superuser = True
+        resp = get_matched_applicants(req, post.id)
         assert resp.status_code == 200, 'Should check matching applicants are returned to user'
         assert b'Applications' in resp.content, 'Should check correctness of matched url'
+
+        resp = get_matched_applicants(req, uuid4())
+        assert isinstance(resp, Http404), 'Should check that post if post does not exist, 404 error is returned'
+
+        random_user = mixer.blend('auth.User')
+        req.user = random_user
+        req.user.is_superuser = True
+        resp = get_matched_applicants(req, post.id)
+        assert resp.status_code == 403, 'Should check that user that did not create a post cannot get applicants for the post'
 
     def test_send_invitation_email(self, db_user, db_potential):
         user = db_user

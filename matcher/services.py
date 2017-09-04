@@ -133,7 +133,7 @@ def verify_job(user, job_id):
     try:
         verify_user = JobPost.objects.get(id=job_id)
     except:
-        raise JobPost.DoesNotExist
+        return False
 
     if verify_user.user.id == user.id:
         return True
@@ -144,6 +144,7 @@ def verify_job(user, job_id):
 def get_matches(job_id, age, marital_status, experience, salary, edu_level):
     """
     
+    :param job_id: post to match
     :param age: minimum required age of applicant
     :param marital_status: married or single
     :param experience: active employment

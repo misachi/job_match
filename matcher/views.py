@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import (
     HttpResponseForbidden,
-    HttpResponseNotAllowed,
     Http404,
-    HttpResponseBadRequest,
     HttpResponse
 )
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
 from django.db import transaction
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -156,7 +153,6 @@ def get_jobs(request):
     """
     
     :param request: 
-    :param category: 
     Description: retrieves posts based on given categories 
     """
 
@@ -206,6 +202,9 @@ def get_matched_applicants(request, job_id):
     User should choose at least 3 parameters to filter applicants
     """
     verify = verify_job(user, job_id)
+    if verify == False:
+        return Http404()
+
     if verify is None:
         return HttpResponseForbidden('This is not your job post. Please look '
                                      'for post that you have created')
