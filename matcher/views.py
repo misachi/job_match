@@ -139,7 +139,7 @@ def delete_post(request, post_id):
     try:
         delete(post_id)
     except JobPost.DoesNotExist:
-        return Http404()
+        raise Http404()
     return HttpResponse()
 
 
@@ -204,7 +204,7 @@ def get_matched_applicants(request, job_id):
     verify = verify_job(user, job_id)
 
     if verify == False:
-        return Http404()
+        raise Http404()
 
     if verify is None:
         return HttpResponseForbidden('This is not your job post. Please look '

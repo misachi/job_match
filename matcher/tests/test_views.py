@@ -4,7 +4,7 @@ from django.core import mail
 from django.test import RequestFactory
 from mixer.backend.django import mixer
 from django.contrib.auth.models import User, AnonymousUser
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 
 from matcher.views import (register, create_jobs, update_post, index, delete_post,
                            view_job, get_jobs, save_potential, get_matched_applicants,
@@ -146,8 +146,8 @@ class TestAuthentication:
         req.user = db_user
         req.user.is_superuser = True
         random_uuid = uuid4()
-        resp = delete_post(req, random_uuid)
-        assert isinstance(resp, Http404), 'Should check Http404 error thrown when object does not exist'
+        with pytest.raises(Http404, message='Should check Http404 error thrown when object does not exist'):
+            delete_post(req, random_uuid)
 
     def test_delete_post(self, db_user, db_jobpost):
         user = db_user
@@ -174,8 +174,8 @@ class TestAuthentication:
     def test_get_jobs_404(self, db_jobpost):
         post = db_jobpost
         req = RequestFactory().post('/', data={'category': post.category})
-        resp = get_jobs(req)
-        assert isinstance(resp, Http404), 'Should check 404 error if object does not exist'
+        with pytest.raises(Http404, message='Should check 404 error if object does not exist'):
+            get_jobs(req)
 
     def test_get_jobs(self, db_jobpost):
         post = db_jobpost
@@ -270,8 +270,9 @@ class TestAuthentication:
         assert resp.status_code == 200, 'Should check matching applicants are returned to user'
         assert b'Applications' in resp.content, 'Should check correctness of matched url'
 
-        resp = get_matched_applicants(req, uuid4())
-        assert isinstance(resp, Http404), 'Should check that post if post does not exist, 404 error is returned'
+        with pytest.raises(Http404, message='Should check that post if post does not exist, 404 error is returned'):
+            get_matched_applicants(req, uuid4())
+        # assert isinstance(resp, Http404), 'Should check that post if post does not exist, 404 error is returned'
 
         random_user = mixer.blend('auth.User')
         req.user = random_user
