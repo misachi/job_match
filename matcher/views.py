@@ -34,7 +34,7 @@ def index(request):
     :param request:  
     """
     jobs = JobPost.objects.all().order_by('-created')
-    paginator = Paginator(jobs, 12)
+    paginator = Paginator(jobs, 4)
     page = request.GET.get('page')
     try:
         jobs = paginator.page(page)

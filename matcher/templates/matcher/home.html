@@ -50,6 +50,7 @@
             </div>
         </div>
         <br>
+        <div class="row">
         {% for job in all_jobs %}
         <div class="col-md-4">
             <div class="panel panel-success">
@@ -58,7 +59,7 @@
                     <form action="{% url 'view_job' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="job_id" value="{{ job.id }}" />
-                        {{ job.description|truncatechars:30 }}
+                        {{ job.description|truncatechars:200 }}
                         <button type="submit" class="button btn btn-xs btn-success buttonItems">
                             <span class="glyphicon glyphicon-share-alt" aria-hidden="true"> Read more</span>
                         </button>
@@ -79,30 +80,35 @@
             </div>
         </div>
         {% endfor %}
+        </div>
+        <hr>
 
-        {% if all_jobs.has_other_pages %}
-        <ul class="pagination">
-            {% if all_jobs.has_previous %}
-              <li><a href="?page={{ all_jobs.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-              <li class="disabled"><span>&laquo;</span></li>
+
+        <div class="text-center margin-top-120">
+            {% if all_jobs.has_other_pages %}
+            <ul class="pagination">
+                {% if all_jobs.has_previous %}
+                  <li><a href="?page={{ all_jobs.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+
+                {% for i in users.paginator.page_range %}
+                  {% if all_jobs.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if all_jobs.has_next %}
+                  <li><a href="?page={{ all_jobs.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
             {% endif %}
-
-            {% for i in users.paginator.page_range %}
-              {% if all_jobs.number == i %}
-                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-              {% else %}
-                <li><a href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-
-            {% if all_jobs.has_next %}
-              <li><a href="?page={{ all_jobs.next_page_number }}">&raquo;</a></li>
-            {% else %}
-                <li class="disabled"><span>&raquo;</span></li>
-            {% endif %}
-        </ul>
-        {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
