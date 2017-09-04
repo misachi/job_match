@@ -160,7 +160,7 @@ def get_jobs(request):
     jobs = get_jobs_per_category(category)
 
     if jobs is None:
-        return Http404('Jobs matching query do not exist')
+        raise Http404()
 
     return render(request, 'matcher/categories.html', {'jobs': jobs})
 
@@ -202,6 +202,7 @@ def get_matched_applicants(request, job_id):
     User should choose at least 3 parameters to filter applicants
     """
     verify = verify_job(user, job_id)
+
     if verify == False:
         return Http404()
 
