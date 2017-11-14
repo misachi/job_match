@@ -1,18 +1,23 @@
+local_settings.py
+# Byte-compiled / optimized / DLL files
+*.pyc
+
+
+# Database stuff
+*.sqlite3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# project files and directories
+/insurance/local_settings.py
 
 #pycharm ide files
 .idea/
 
 #log file
 logs
-
-# project files and directories
-/Include/
-/Lib/
-/Scripts/
-/tcl/
 
 # C extensions
 *.so
@@ -33,6 +38,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.env
 
 # Installer logs
 pip-log.txt
@@ -67,6 +73,7 @@ docs/_build/
 
 .DS_Store
 *.sqlite3
-media/
 
-.env
+# vim swap files
+*.swp
+*.swo

@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'customizable_django_profiler.cProfileMiddleware',
 ]
 
 ROOT_URLCONF = 'jobs.urls'
@@ -131,6 +132,10 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+PROFILER = {
+    'activate': True,
+}
+
 # Email Config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
@@ -139,7 +144,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-# try:
-#     from jobs.local_settings import *
-# except ImportError:
-#     pass
+try:
+    from jobs.local_settings import *
+except ImportError:
+    pass
