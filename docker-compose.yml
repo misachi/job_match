@@ -3,12 +3,24 @@ version: '3'
 services:
   db:
     image: postgres
+    networks:
+      - db_net
+
   web:
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    links:
+      - db
+    networks:
+      - db_net
+    command: ./run_web.sh
+#    command: python manage.py runserver 0.0.0.0:8010
+    user: "501"
     volumes:
-      - .:/code
+      - .:/matcher
     ports:
-      - "8000:8000"
+      - "8010:8010"
     depends_on:
       - db
+
+networks:
+  db_net:
