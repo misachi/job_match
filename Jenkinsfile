@@ -3,9 +3,7 @@ pipeline {
     stages {
         stage('Test') {
             agent {
-                docker {
-                    image 'qnib/pytest'
-                }
+                dockerfile true
             }
             steps {
                 sh 'pytest --verbose --junit-xml test-reports/results.xml'
