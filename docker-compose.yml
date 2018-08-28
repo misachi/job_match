@@ -14,7 +14,7 @@ services:
       - db_net
     command: ./run_web.sh
 #    command: python manage.py runserver 0.0.0.0:8010
-    user: "501"
+    user: "1000"
     volumes:
       - .:/matcher
     ports:
