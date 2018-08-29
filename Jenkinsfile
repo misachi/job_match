@@ -6,7 +6,7 @@ pipeline {
                 dockerfile true
             }
             steps {
-                sh 'service postgres start && pytest --verbose --junit-xml test-reports/results.xml'
+                sh 'service postgresql start && pytest --verbose --junit-xml test-reports/results.xml'
             }
             post {
                 always {
