@@ -9,7 +9,7 @@ try:
             'NAME': 'test_db',
             'USER': 'postgres',
             'PASSWORD': 'pass1234',
-            'HOST': db,
+            'HOST': 'db',
             'PORT': 5432,
         }
     }
