@@ -1,4 +1,5 @@
 node {
+    checkout scm
     docker.image('postgres:10.1').withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
         docker.image('python:2').inside("--link ${c.id}:db -u root") {
             try {
