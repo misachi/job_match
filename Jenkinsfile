@@ -6,7 +6,8 @@ pipeline {
                 dockerfile true
             }
             steps {
-                sh 'service postgresql start && pytest --verbose --junit-xml test-reports/results.xml'
+                sh 'docker run -t -d --name test_db -e POSTGRES_PASSWORD=pass1234 -p 5432:5432 postgres'
+                sh 'pytest --verbose --junit-xml test-reports/results.xml'
             }
             post {
                 always {
