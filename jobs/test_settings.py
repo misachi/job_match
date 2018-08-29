@@ -2,13 +2,18 @@ from decouple import config
 
 from jobs.settings import *
 
+try:
+    host = config('DB_HOST')
+except:
+    host = 'db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'test_db',
         'USER': 'postgres',
         'PASSWORD': 'pass1234',
-        'HOST': 'db',
+        'HOST': host,
         'PORT': 5432,
     }
 }
