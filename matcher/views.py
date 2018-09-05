@@ -62,14 +62,12 @@ def register(request):
                            'Can change job post', 'Can delete job post',
                            'Can add job post']
 
-            #  All transactions must be committed to database i.e all or nothing
             with transaction.atomic():
                 create_user(request, username, email, password,
                             reg_type, permissions)
 
             return redirect('home')
         else:
-            # return HttpResponseBadRequest()
             return render(request, 'matcher/register.html', {'form': user_form})
     else:
         user_form = RegistrationForm()
