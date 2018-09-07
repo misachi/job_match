@@ -1,7 +1,7 @@
-env.POSTGRES_IMG = 'postgres:10.1'
 env.TEST_IMAGE = 'misachi/matcher_python:20180904'
+env.POSTGRES_IMG = 'postgres:10.1'
 
-node('master') {
+node {
     checkout scm
 
     stage('Build') {
