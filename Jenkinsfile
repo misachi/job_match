@@ -18,7 +18,7 @@ node('master') {
                     try {
                         sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         currentBuild.result = 'SUCCESS'
-                    catch (Exception err) {
+                    } catch (Exception err) {
                         currentBuild.result = 'FAILURE'
                     }
 
