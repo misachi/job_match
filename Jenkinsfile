@@ -14,13 +14,14 @@ node('master') {
     stage ('Test') {
         docker.image(env.POSTGRES_IMG).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
             docker.image(env.TEST_IMAGE).inside("--link ${c.id}:db -u root") {
-                try {
-                    if (env.BRANCH_NAME == 'master') {
+                if (env.BRANCH_NAME == 'master') {
+                    try {
                         sh 'pytest --verbose --junit-xml test-reports/results.xml'
-                    } else {
-                        echo 'Not to be tested'
+                        currentBuild.result = 'SUCCESS'
+                    catch (Exception err) {
+                        currentBuild.result = 'FAILURE'
                     }
-                } finally {
+
                     if (currentBuild.currentResult == 'SUCCESS') {
                         echo 'Successful'
                         junit 'test-reports/results.xml'
@@ -29,6 +30,8 @@ node('master') {
                     } else {
                         echo 'Not testable'
                     }
+                } else {
+                    echo 'Not to be tested'
                 }
             }
         }
