@@ -23,14 +23,14 @@ node('master') {
                     }
 
                     if (currentBuild.result == 'SUCCESS') {
-                        echo 'Successful'
                         junit 'test-reports/results.xml'
                     } else if (currentBuild.result == 'FAILURE') {
-                        echo 'Failure'
+                        // TODO: Email Here
+                        echo 'RESULT: ${currentBuild.result}'
+                        echo 'CHANGE ID: ${env.CHANGE_ID}'
                     } else {
-                        echo 'Not testable'
+                        echo 'Did not match any status'
                     }
-                    echo "RESULT: ${currentBuild.result}"
                 } else {
                     echo 'Not to be tested'
                 }
