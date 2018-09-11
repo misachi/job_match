@@ -22,14 +22,15 @@ node('master') {
                         currentBuild.result = 'FAILURE'
                     }
 
-                    if (currentBuild.result == 'SUCCESS') {
+                    if (${currentBuild.result} == 'SUCCESS') {
                         echo 'Successful'
                         junit 'test-reports/results.xml'
-                    } else if (currentBuild.result == 'FAILURE') {
+                    } else if (${currentBuild.result} == 'FAILURE') {
                         echo 'Failure'
                     } else {
                         echo 'Not testable'
                     }
+                    echo "RESULT: ${currentBuild.result}"
                 } else {
                     echo 'Not to be tested'
                 }
