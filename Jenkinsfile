@@ -17,16 +17,18 @@ node('master') {
                 try {
                     if (env.BRANCH_NAME == 'master') {
                         sh 'pytest --verbose --junit-xml test-reports/results.xml'
-                        if (currentBuild.currentResult == 'SUCCESS') {
-                            echo 'Successful'
-                        } else if (currentBuild.currentResult == 'FAILURE') {
-                            echo 'Failure'
-                        }
                     } else {
                         echo 'Not to be tested'
                     }
                 } finally {
-                    junit 'test-reports/results.xml'
+                    if (currentBuild.currentResult == 'SUCCESS') {
+                        echo 'Successful'
+                        junit 'test-reports/results.xml'
+                    } else if (currentBuild.currentResult == 'FAILURE') {
+                        echo 'Failure'
+                    } else {
+                        echo 'Not testable'
+                    }
                 }
             }
         }
