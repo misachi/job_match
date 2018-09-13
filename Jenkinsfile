@@ -18,8 +18,16 @@ node('master') {
                     try {
                         sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         currentBuild.result = 'SUCCESS'
+                        mail body: 'project build successful',
+                             from: 'bpaynotifications@busaracenter.org',
+                             subject: 'project build successful',
+                             to: 'brian.misachi@busaracenter.org'
                     } catch (Exception err) {
                         currentBuild.result = 'FAILURE'
+                        mail body: 'project build failure',
+                             from: 'bpaynotifications@busaracenter.org',
+                             subject: 'project build failure',
+                             to: 'brian.misachi@busaracenter.org'
                     }
 
                     if (currentBuild.result == 'SUCCESS') {
