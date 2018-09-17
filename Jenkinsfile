@@ -17,7 +17,7 @@ node('master') {
     }
 
     stage ('Test') {
-        docker.image(db).('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
+        docker.image(env.POSTGRES_IMG).('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
             app.inside("--link ${c.id}:${db} -u root") {
                 if (env.BRANCH_NAME == 'master') {
                     try {
