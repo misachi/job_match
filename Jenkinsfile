@@ -1,5 +1,6 @@
-env.TEST_IMAGE = 'misachi/matcher_python:20180904'
+env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
+env.WORKSPACE = pwd()
 
 node('master') {
     checkout scm
@@ -16,12 +17,19 @@ node('master') {
             docker.image(env.TEST_IMAGE).inside("--link ${c.id}:db -u root") {
                 if (env.BRANCH_NAME == 'master') {
                     try {
-                        sh 'pytest --verbose --junit-xml test-reports/results.xml'
-                        currentBuild.result = 'SUCCESS'
-                        mail body: 'project build successful',
-                             from: 'bpaynotifications@busaracenter.org',
-                             subject: 'project build successful',
-                             to: 'brian.misachi@busaracenter.org'
+                        // sh 'pytest --verbose --junit-xml test-reports/results.xml'
+                        sh 'python run_tests.py'
+
+                        if (fileExists('${env.WORKSPACE}/test_report.txt')) {
+                            def cov_total = readFile '${env.WORKSPACE}/test_report.txt'
+                            currentBuild.result = 'SUCCESS'
+                            mail body: 'project build successful',
+                                 from: 'bpaynotifications@busaracenter.org',
+                                 subject: 'project build successful',
+                                 to: 'brian.misachi@busaracenter.org'
+                        } else {
+                            echo 'File does not exist'
+                        }
                     } catch (Exception err) {
                         currentBuild.result = 'FAILURE'
                         mail body: 'project build failure',
