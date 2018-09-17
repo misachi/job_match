@@ -1,7 +1,8 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = 70
-env.app
+def app
+def db
 
 node('master') {
     stage('Clone Repository') {
@@ -10,14 +11,14 @@ node('master') {
 
     stage('Build') {
         if (isUnix()) {
-            docker.build(env.POSTGRES_IMG)
-            env.app = docker.build('web_app', '.')
+            db = docker.build(env.POSTGRES_IMG)
+            app = docker.build('web_app', '.')
         }
     }
 
     stage ('Test') {
-        docker.image(env.POSTGRES_IMG).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
-            env.app.inside("--link ${c.id}:db -u root") {
+        db.withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
+            app.inside("--link ${c.id}:db -u root") {
                 if (env.BRANCH_NAME == 'master') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
