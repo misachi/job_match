@@ -19,9 +19,9 @@ node('master') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         sh 'python run_tests.py'
-
-                        if (fileExists(env.WORKSPACE/'test_report.txt')) {
-                            def cov_total = readFile env.WORKSPACE/'test_report.txt'
+                        def file_path = "${env.WORKSPACE}/test_report.txt"
+                        if (fileExists(file_path)) {
+                            def cov_total = readFile file_path
                             currentBuild.result = 'SUCCESS'
                             mail body: 'project build successful',
                                  from: 'bpaynotifications@busaracenter.org',
