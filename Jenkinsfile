@@ -20,16 +20,15 @@ node('master') {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         sh 'python run_tests.py'
                         def file_path = "${env.WORKSPACE}/test_report.txt"
-                        if (fileExists(file_path)) {
-                            def cov_total = readFile file_path
-                            currentBuild.result = 'SUCCESS'
-                            mail body: 'project build successful',
-                                 from: 'bpaynotifications@busaracenter.org',
-                                 subject: 'project build successful',
-                                 to: 'brian.misachi@busaracenter.org'
-                        } else {
-                            echo 'File does not exist'
-                        }
+                        // if (fileExists(file_path)) {
+                        // try {
+                        def cov_total = readFile file_path
+                        currentBuild.result = 'SUCCESS'
+                        mail body: 'project build successful',
+                             from: 'bpaynotifications@busaracenter.org',
+                             subject: 'project build successful',
+                             to: 'brian.misachi@busaracenter.org'
+
                     } catch (Exception err) {
                         currentBuild.result = 'FAILURE'
                         mail body: 'project build failure',
