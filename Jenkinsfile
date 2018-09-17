@@ -27,12 +27,12 @@ node('master') {
                             currentBuild.result = 'SUCCESS'
 
                             if (total > env.THRESHOLD) {
-                                mail body: '<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}'</p>,
+                                mail body: '<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>',
                                      from: 'bpaynotifications@busaracenter.org',
                                      subject: 'project build successful ',
                                      to: 'brian.misachi@busaracenter.org'
                             } else {
-                                mail body: '<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}'</p>,
+                                mail body: '<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>',
                                  from: 'bpaynotifications@busaracenter.org',
                                  subject: 'Threshold not satisfied',
                                  to: 'brian.misachi@busaracenter.org'
