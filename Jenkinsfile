@@ -1,5 +1,6 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
+env.THRESHOLD = 70
 
 node('master') {
     checkout scm
@@ -22,11 +23,20 @@ node('master') {
                         def file_path = "${env.WORKSPACE}/test_report.txt"
                         if (fileExists(file_path)) {
                             def cov_total = readFile file_path
+                            def total = Long.valueOf(cov_total)
                             currentBuild.result = 'SUCCESS'
-                            mail body: 'project build successful',
+
+                            if (total > env.THRESHOLD) {
+                                mail body: '<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}'</p>,
+                                     from: 'bpaynotifications@busaracenter.org',
+                                     subject: 'project build successful ',
+                                     to: 'brian.misachi@busaracenter.org'
+                            } else {
+                                mail body: '<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}'</p>,
                                  from: 'bpaynotifications@busaracenter.org',
-                                 subject: 'project build successful',
+                                 subject: 'Threshold not satisfied',
                                  to: 'brian.misachi@busaracenter.org'
+                            }
                             echo cov_total
                         } else {
                             echo 'File does not exist'
@@ -34,7 +44,7 @@ node('master') {
 
                     } catch (Exception err) {
                         currentBuild.result = 'FAILURE'
-                        mail body: 'project build failure',
+                        mail body: 'Project build failure',
                              from: 'bpaynotifications@busaracenter.org',
                              subject: 'project build failure',
                              to: 'brian.misachi@busaracenter.org'
