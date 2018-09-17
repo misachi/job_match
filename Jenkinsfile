@@ -27,6 +27,7 @@ node('master') {
                                  from: 'bpaynotifications@busaracenter.org',
                                  subject: 'project build successful',
                                  to: 'brian.misachi@busaracenter.org'
+                            echo cov_total
                         } else {
                             echo 'File does not exist'
                         }
