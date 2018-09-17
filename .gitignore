@@ -80,3 +80,4 @@ docs/_build/
 
 log_files/
 test_report.txt
+test-reports/
