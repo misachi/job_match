@@ -11,7 +11,7 @@ node('master') {
 
     stage('Build') {
         if (isUnix()) {
-            db = docker.build(env.POSTGRES_IMG)
+            db = env.TEST_IMAGE
             app = docker.build('web_app', '.')
         }
     }
