@@ -1,7 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup as BS
 
-pytest.main(['--durations', '10', '--cov-report', 'html'])
+pytest.main(['--durations', '10', '--cov-report', 'html', '--junit-xml', 'test-reports/results.xml', '--verbose'])
 url = r'htmlcov/index.html'
 page = open(url)
 soup = BS(page.read(), features='html5lib')
