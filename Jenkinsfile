@@ -1,6 +1,5 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
-env.WORKSPACE = pwd()
 
 node('master') {
     checkout scm
@@ -19,6 +18,7 @@ node('master') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         sh 'python run_tests.py'
+                        env.WORKSPACE = pwd()
                         def file_path = "${env.WORKSPACE}/test_report.txt"
                         // if (fileExists(file_path)) {
                         // try {
