@@ -5,6 +5,7 @@ def app
 def db
 
 node('master') {
+    System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "sandbox; default-src 'self';")
     stage('Clone Repository') {
         checkout scm
     }
@@ -18,7 +19,7 @@ node('master') {
 
     stage ('Test') {
         docker.image(env.POSTGRES_IMG).('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
-            app.inside("--link ${c.id}:${db} -u root") {
+            app.inside("--link ${c.id}:db -u root") {
                 if (env.BRANCH_NAME == 'master') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
