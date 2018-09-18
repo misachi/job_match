@@ -18,7 +18,7 @@ node('master') {
 
     stage ('Test') {
         docker.image(env.POSTGRES_IMG).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
-            docker.image('web_app').inside("--link ${c.id}:db -u root") {
+            docker.image(env.TEST_IMAGE).inside("--link ${c.id}:db -u root") {
                 if (env.BRANCH_NAME == 'master') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
