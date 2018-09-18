@@ -1,7 +1,7 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = 70
-env.app = ''
+env.app = 'misachi/matcher:20180918.0.0'
 env.db_psql = ''
 
 node('master') {
@@ -12,13 +12,13 @@ node('master') {
     stage('Build') {
         if (isUnix()) {
             env.db_psql = env.POSTGRES_IMG
-            env.app = docker.build('web_app', '.')
+            docker.build(env.app, '.')
         }
     }
 
     stage ('Test') {
         docker.image(env.db_psql).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
-            env.app.inside("--link ${c.id}:db -u root") {
+            docker.image(env.app).inside("--link ${c.id}:db -u root") {
                 // if (env.BRANCH_NAME == 'master') {
                 if (env.BRANCH_NAME == 'Test-Multibranch-Jenkins') {
                     try {
