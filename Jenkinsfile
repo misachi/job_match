@@ -19,8 +19,8 @@ node('master') {
     stage ('Test') {
         docker.image(env.db_psql).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
             docker.image(env.app).inside("--link ${c.id}:db -u root") {
-                if (env.BRANCH_NAME == 'master') {
-                // if (env.BRANCH_NAME == 'Test-Multibranch-Jenkins') {
+                // if (env.BRANCH_NAME == 'master') {
+                if (env.BRANCH_NAME == 'Test-Multibranch-Jenkins') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         sh 'python run_tests.py'
