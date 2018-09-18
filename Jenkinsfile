@@ -11,8 +11,9 @@ node('master') {
 
     stage('Build') {
         if (isUnix()) {
-            db_psql = env.POSTGRES_IMG
-            app = docker.build('web_app', '.')
+            echo 'is Unix'
+            // db_psql = env.POSTGRES_IMG
+            // app = docker.build('web_app', '.')
         }
     }
 
