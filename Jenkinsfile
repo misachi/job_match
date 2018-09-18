@@ -1,8 +1,8 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = 70
-def app
-def db_psql
+env.app = ''
+env.db_psql = ''
 
 node('master') {
     stage('Clone Repository') {
@@ -11,16 +11,16 @@ node('master') {
 
     stage('Build') {
         if (isUnix()) {
-            echo 'is Unix'
-            // db_psql = env.POSTGRES_IMG
-            // app = docker.build('web_app', '.')
+            env.db_psql = env.POSTGRES_IMG
+            env.app = docker.build('web_app', '.')
         }
     }
 
     stage ('Test') {
-        docker.image(env.POSTGRES_IMG).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
-            docker.image(env.TEST_IMAGE).inside("--link ${c.id}:db -u root") {
-                if (env.BRANCH_NAME == 'master') {
+        docker.image(env.db_psql).withRun('-e "POSTGRES_PASSWORD=pass1234" -p 5432:5432') { c ->
+            env.app.inside("--link ${c.id}:db -u root") {
+                // if (env.BRANCH_NAME == 'master') {
+                if (env.BRANCH_NAME == 'Test-Multibranch-Jenkins') {
                     try {
                         // sh 'pytest --verbose --junit-xml test-reports/results.xml'
                         sh 'python run_tests.py'
