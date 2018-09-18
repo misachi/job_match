@@ -2,7 +2,7 @@ env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = 70
 def app
-def db
+def db_psql
 
 node('master') {
     stage('Clone Repository') {
@@ -11,7 +11,7 @@ node('master') {
 
     stage('Build') {
         if (isUnix()) {
-            db = env.TEST_IMAGE
+            db_psql = env.POSTGRES_IMG
             app = docker.build('web_app', '.')
         }
     }
