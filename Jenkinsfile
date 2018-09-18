@@ -32,12 +32,12 @@ node('master') {
                             currentBuild.result = 'SUCCESS'
 
                             if (total > env.THRESHOLD) {
-                                mail body: '<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>',
+                                mail body: "<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>",
                                      from: 'bpaynotifications@busaracenter.org',
                                      subject: 'project build successful ',
                                      to: 'brian.misachi@busaracenter.org'
                             } else {
-                                mail body: '<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>',
+                                mail body: "<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>",
                                  from: 'bpaynotifications@busaracenter.org',
                                  subject: 'Threshold not satisfied',
                                  to: 'brian.misachi@busaracenter.org'
@@ -48,6 +48,7 @@ node('master') {
                         }
 
                     } catch (Exception err) {
+                        echo err
                         currentBuild.result = 'FAILURE'
                         mail body: 'Project build failure',
                              from: 'bpaynotifications@busaracenter.org',
@@ -59,8 +60,8 @@ node('master') {
                         junit 'test-reports/results.xml'
                     } else if (currentBuild.result == 'FAILURE') {
                         // TODO: Email Here
-                        echo 'RESULT: ${currentBuild.result}'
-                        echo 'CHANGE ID: ${env.CHANGE_ID}'
+                        echo "RESULT: ${currentBuild.result}"
+                        echo "CHANGE ID: ${env.CHANGE_ID}"
                     } else {
                         echo 'Did not match any status'
                     }
