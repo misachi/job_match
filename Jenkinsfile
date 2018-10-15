@@ -1,7 +1,7 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = '70'
-env.app = 'misachi/matcher:20181015.0.0'
+env.app = 'misachi/matcher'
 env.db_psql = ''
 
 node('master') {
@@ -12,7 +12,7 @@ node('master') {
     stage('Build') {
         if (isUnix()) {
             env.db_psql = env.POSTGRES_IMG
-            docker.build(env.app, '.')
+            env.app = docker.build("${env.app}:${env.BUILD_ID}", ".")
         }
     }
 
@@ -72,13 +72,14 @@ node('master') {
     }
 
     stage ('Cleanup') {
+        sh 'docker rmi -f ${env.app}'
         // Dangling Containers
-        sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
+         //sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
 
         // Dangling Images
-        sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
+        //sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
 
         // Dangling Volumes
-        sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
+        //sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
     }
 }
