@@ -1,7 +1,7 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = '70'
-env.app = 'misachi/matcher'
+env.app = "${env.app}:${env.BUILD_ID}"
 env.db_psql = ''
 
 node('master') {
@@ -12,7 +12,7 @@ node('master') {
     stage('Build') {
         if (isUnix()) {
             env.db_psql = env.POSTGRES_IMG
-            env.app = docker.build("${env.app}:${env.BUILD_ID}", ".")
+            docker.build(env.app, ".")
         }
     }
 
