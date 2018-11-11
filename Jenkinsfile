@@ -1,7 +1,7 @@
 env.TEST_IMAGE = 'misachi/matcher_python:20180917.0.1'
 env.POSTGRES_IMG = 'postgres:10.1'
 env.THRESHOLD = '70'
-env.app = "${env.app}:${env.BUILD_ID}"
+env.app = "misachi/matcher:${env.BUILD_ID}"
 env.db_psql = ''
 
 node('master') {
@@ -31,12 +31,12 @@ node('master') {
                             currentBuild.result = 'SUCCESS'
 
                             if (cov_total > env.THRESHOLD) {
-                                mail body: "<p>Project build successful</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>",
+                                mail body: "Project build successful. Coverage is ${cov_total} and threshold is ${env.THRESHOLD}",
                                      from: 'bpaynotifications@busaracenter.org',
                                      subject: 'Project build successful ',
                                      to: 'brian.misachi@busaracenter.org'
                             } else {
-                                mail body: "<p>Project build does not meet threshold</p><p>Coverage is ${cov_total} and threshold is ${env.THRESHOLD}</p>",
+                                mail body: "Project build does not meet threshold. Coverage is ${cov_total} and threshold is ${env.THRESHOLD}",
                                  from: 'bpaynotifications@busaracenter.org',
                                  subject: 'Threshold not satisfied',
                                  to: 'brian.misachi@busaracenter.org'
