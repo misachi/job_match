@@ -2,16 +2,28 @@ from decouple import config
 
 from jobs.settings import *
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_db',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': 5432,
+try:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'test_db',
+            'USER': 'postgres',
+            'PASSWORD': 'pass1234',
+            'HOST': 'db',
+            'PORT': 5432,
+        }
     }
-}
+except:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'test_db',
+            'USER': 'postgres',
+            'PASSWORD': 'pass1234',
+            'HOST': 'localhost',
+            'PORT': 5432,
+        }
+    }
 
 #DATABASES = {
 #    'default': {
@@ -22,4 +34,4 @@ DATABASES = {
 #        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
 #        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
 #    }
-}
+#}

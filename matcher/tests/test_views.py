@@ -117,7 +117,7 @@ class TestAuthentication:
     def test_update_post_get_method(self, db_user, db_jobpost):
         user = db_user
         post = db_jobpost
-        req = RequestFactory().get('/')
+        req = RequestFactory.get('/')
         req.user = user
         req.user.is_superuser = True
         resp = update_post(req, post.id)

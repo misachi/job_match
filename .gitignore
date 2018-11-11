@@ -79,3 +79,5 @@ docs/_build/
 *.swo
 
 log_files/
+test_report.txt
+test-reports/
