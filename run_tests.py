@@ -11,8 +11,8 @@ aggregate_total = soup.find_all('tr', {'class': 'total'})
 final = None
 
 for x in aggregate_total:
-    pct = x.text.replace(' ', '').replace('\n', ' ').split(' ')
-    final = pct[6]
+    pcnt = x.text.replace(' ', '').replace('\n', ' ').split(' ')
+    final = pcnt[6]
 
 with open('test_report.txt', 'w') as report:
     report.write(final.strip().replace('%', ''))
