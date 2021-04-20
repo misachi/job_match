@@ -12,7 +12,7 @@ mixer==5.6.6
 mock==2.0.0
 pbr==3.1.1
 psycopg2==2.7.3.1
-py==1.4.34
+py==1.10.0
 pytest==3.2.1
 pytest-cov==2.5.1
 pytest-django==3.1.2
